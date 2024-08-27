@@ -37,6 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party apps
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'parler',
+    'parler_rest',
+    'corsheaders',
+    'drf_yasg',
+    'dj_rest_auth',
+    
+    # Local apps
+    'application.apps.ApplicationConfig',
+    'user.apps.UserConfig',
+    'education.apps.EducationConfig',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +83,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'dj_rest_auth.jwt_auth.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+}
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'LOGIN_SERIALIZER': 'user.serializer.LoginSerializer',
+    'REGISTER_SERIALIZER': 'user.serializer.RegisterSerializer',
+}
 
 
 # Database
@@ -111,12 +146,30 @@ USE_I18N = True
 
 USE_TZ = True
 
+PARLER_DEFAULT_LANGUAGE_CODE = 'uz'
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en'},
+        {'code': 'ru'},
+        {'code': 'uz'},
+    ),
+    'default': {
+        'fallback': ['uz'],
+        'hide_untranslated': False,
+    }
+}
+
 AUTH_USER_MODEL = 'user.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
+
+MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
