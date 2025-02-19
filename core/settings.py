@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['api-xbq.tkti.uz', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['api-xbq.tkti.uz']
+CSRF_TRUSTED_ORIGINS = ['https://api-xbq.tkti.uz']
 
 
 # Application definition
