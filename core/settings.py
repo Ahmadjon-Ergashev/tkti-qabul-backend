@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'application.apps.ApplicationConfig',
     'user.apps.UserConfig',
     'education.apps.EducationConfig',
+    'news.apps.NewsConfig',
 ]
 
 MIDDLEWARE = [

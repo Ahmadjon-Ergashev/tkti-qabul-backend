@@ -1,8 +1,9 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import ApplicationViewSet
+from .views import NewsViewSet
+
 
 router = DefaultRouter()
-router.register(r'', ApplicationViewSet)
+router.register(r'', NewsViewSet, basename='news')
 
 urlpatterns = router.urls

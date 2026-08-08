@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/', include('user.urls')),
     path('api/education/', include('education.urls', namespace='education')),
     path('api/application/', include('application.urls')),
+    path('api/news/', include('news.urls')),
     path('admin/', admin.site.urls),
 ]
 
