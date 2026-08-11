@@ -229,13 +229,6 @@ SPECTACULAR_SETTINGS = {
         'docExpansion': 'list',
         'defaultModelsExpandDepth': 1,
     },
-    'TAGS': [
-        {'name': 'auth', 'description': 'Authentication & User Registration'},
-        {'name': 'application', 'description': 'Student Applications'},
-        {'name': 'education', 'description': 'Universities & Specialties'},
-        {'name': 'news', 'description': 'News & Announcements'},
-        {'name': 'student', 'description': 'Student Profile Data'},
-    ],
 }
 
 
