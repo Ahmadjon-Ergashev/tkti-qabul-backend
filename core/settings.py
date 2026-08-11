@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'parler',
     'parler_rest',
     'corsheaders',
-    'drf_yasg',
+    'drf_spectacular',
     'dj_rest_auth',
     
     # Local apps
@@ -107,6 +107,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
     ),
@@ -214,19 +215,18 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
 
-# Swagger UI (drf_yasg) settings
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
+# Swagger / OpenAPI Schema settings (drf-spectacular)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'TKTI-Qabul API',
+    'DESCRIPTION': 'qabul.tkti.uz API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': False,
     },
-    'USE_SESSION_AUTH': False,
-    'DEFAULT_MODEL_RENDERING': 'example',
-    'SHOW_REQUEST_HEADERS': True,
-    'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'delete', 'patch'],
 }
+
 
 

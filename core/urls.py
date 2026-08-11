@@ -18,32 +18,22 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from rest_framework.permissions import AllowAny
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
-
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="TKTI-Qabul API",
-        default_version="v1",
-        description="qabul.tkti.uz API",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="dev@abdgroup.uz"),
-        license=openapi.License(name="License"),
-    ),
-    public=True,
-    permission_classes=[AllowAny],
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
 )
 
+
 urlpatterns = [
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "",
-        schema_view.with_ui("swagger", cache_timeout=0),
+        SpectacularSwaggerView.as_view(url_name="schema"),
         name="schema-swagger-ui",
     ),
-    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="schema-redoc"),
+
     path('api/', include('user.urls')),
     path('api/education/', include('education.urls', namespace='education')),
     path('api/application/', include('application.urls')),

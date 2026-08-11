@@ -9,7 +9,7 @@ django-parler==2.4
 django-parler-rest==2.2
 djangorestframework==3.18.0
 djangorestframework_simplejwt==5.5.1
-drf-yasg==1.21.15
+drf-spectacular==0.30.0
 inflection==0.5.1
 packaging==26.3
 pillow==12.3.0
