@@ -218,15 +218,26 @@ USE_X_FORWARDED_PORT = True
 # Swagger / OpenAPI Schema settings (drf-spectacular)
 SPECTACULAR_SETTINGS = {
     'TITLE': 'TKTI-Qabul API',
-    'DESCRIPTION': 'qabul.tkti.uz API',
+    'DESCRIPTION': 'qabul.tkti.uz API Documentation',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_SETTINGS': {
         'deepLinking': True,
         'persistAuthorization': True,
         'displayOperationId': False,
+        'filter': True,  # Enables live endpoint search/filter bar
+        'docExpansion': 'list',
+        'defaultModelsExpandDepth': 1,
     },
+    'TAGS': [
+        {'name': 'auth', 'description': 'Authentication & User Registration'},
+        {'name': 'application', 'description': 'Student Applications'},
+        {'name': 'education', 'description': 'Universities & Specialties'},
+        {'name': 'news', 'description': 'News & Announcements'},
+        {'name': 'student', 'description': 'Student Profile Data'},
+    ],
 }
+
 
 
 
