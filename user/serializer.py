@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
 
 from user.models import Student, User
+from education.models import EducationForm, EducationType, EducationLanguage
 
 
 class LoginSerializer(serializers.Serializer):
@@ -59,7 +60,19 @@ class RegisterSerializer(serializers.Serializer):
     passport_issue_date = serializers.DateField(required=True)
     pinfl = serializers.CharField(max_length=14, min_length=14, required=True)
     address = serializers.CharField(required=True)
-    photo = serializers.ImageField(required=True)
+    photo = serializers.ImageField(required=False, allow_null=True)
+    school_certificate = serializers.FileField(required=False, allow_null=True)
+    bachelor_diploma = serializers.FileField(required=False, allow_null=True)
+    graduated_institution = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    education_degree = serializers.PrimaryKeyRelatedField(
+        queryset=EducationForm.objects.all(), required=False, allow_null=True
+    )
+    education_type = serializers.PrimaryKeyRelatedField(
+        queryset=EducationType.objects.all(), required=False, allow_null=True
+    )
+    education_language = serializers.PrimaryKeyRelatedField(
+        queryset=EducationLanguage.objects.all(), required=False, allow_null=True
+    )
 
 
     def validate_phone(self, phone):
@@ -80,6 +93,12 @@ class RegisterSerializer(serializers.Serializer):
             'passport_date_of_issue': self.validated_data.get('passport_issue_date'),
             'pinfl': self.validated_data.get('pinfl'),
             'address': self.validated_data.get('address'),
+            'school_certificate': self.validated_data.get('school_certificate'),
+            'bachelor_diploma': self.validated_data.get('bachelor_diploma'),
+            'graduated_institution': self.validated_data.get('graduated_institution'),
+            'education_degree': self.validated_data.get('education_degree'),
+            'education_type': self.validated_data.get('education_type'),
+            'education_language': self.validated_data.get('education_language'),
         }
 
     def save(self, request):

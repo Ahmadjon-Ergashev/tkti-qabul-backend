@@ -110,11 +110,19 @@ class Student(models.Model):
     last_name = models.CharField(max_length=50)
     birth_date = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    photo = models.ImageField(upload_to='students/', null=True, blank=True)
+    photo = models.ImageField(upload_to='students/photos/', null=True, blank=True)
     passport = models.CharField(max_length=9)
     pinfl = models.CharField(max_length=14)
     passport_date_of_issue = models.DateField()
     address = models.CharField(max_length=100)
+
+    school_certificate = models.FileField(upload_to='students/certificates/', null=True, blank=True)
+    bachelor_diploma = models.FileField(upload_to='students/diplomas/', null=True, blank=True)
+
+    graduated_institution = models.CharField(max_length=255, null=True, blank=True)
+    education_degree = models.ForeignKey('education.EducationForm', on_delete=models.SET_NULL, null=True, blank=True)
+    education_type = models.ForeignKey('education.EducationType', on_delete=models.SET_NULL, null=True, blank=True)
+    education_language = models.ForeignKey('education.EducationLanguage', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f'{self.first_name} {self.middle_name} {self.last_name}'
