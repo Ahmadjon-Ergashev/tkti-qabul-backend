@@ -42,7 +42,11 @@ class CountryListView(APIView):
 
 class UniversityListView(APIView):
     def get(self, request):
-        universities = University.objects.all()
+        country = request.query_params.get("country", None)
+        if country:
+            universities = University.objects.filter(country_id=country)
+        else:
+            universities = University.objects.all()
         serializer = UniversitySerializer(universities, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -50,14 +54,12 @@ class UniversityListView(APIView):
 class SpecialtyFilterView(APIView):
     def get(self, request):
         university = request.query_params.get("university", None)
-        country = request.query_params.get("country", None)
         edu_lang = request.query_params.get("edu_lang", None)
         edu_form = request.query_params.get("edu_form", None)
         edu_type = request.query_params.get("edu_type", None)
 
-        # if university and country and edu_lang and edu_form and edu_type:
+        # if university and edu_lang and edu_form and edu_type:
         specialties = Specialty.objects.filter(
-            university__country_id=country,
             university_id=university,
             education_language_id=edu_lang,
             education_form_id=edu_form,
