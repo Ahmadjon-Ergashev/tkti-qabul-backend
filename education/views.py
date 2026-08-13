@@ -13,6 +13,40 @@ from .serializers import (
 
 # Create your views here.
 
+class EducationFormListView(APIView):
+    def get(self, request):
+        edu_forms = EducationForm.objects.all()
+        serializer = EducationFormSerializer(edu_forms, many=True)
+        return Response({"edu_forms": serializer.data}, status=status.HTTP_200_OK)
+
+class EducationTypeListView(APIView):
+    def get(self, request):
+        edu_types = EducationType.objects.all()
+        serializer = EducationTypeSerializer(edu_types, many=True)
+        return Response({"edu_types": serializer.data}, status=status.HTTP_200_OK)
+
+
+class EducationLanguageListView(APIView):
+    def get(self, request):
+        edu_langs = EducationLanguage.objects.all()
+        serializer = EducationLanguageSerializer(edu_langs, many=True)
+        return Response({"edu_langs": serializer.data}, status=status.HTTP_200_OK)
+
+
+class CountryListView(APIView):
+    def get(self, request):
+        countries = Country.objects.all()
+        serializer = CountrySerializer(countries, many=True)
+        return Response({"countries": serializer.data}, status=status.HTTP_200_OK)
+
+
+class UniversityListView(APIView):
+    def get(self, request):
+        universities = University.objects.all()
+        serializer = UniversitySerializer(universities, many=True)
+        return Response({"universities": serializer.data}, status=status.HTTP_200_OK)
+
+
 class SpecialtyFilterView(APIView):
     def get(self, request):
         university = request.query_params.get("university", None)
