@@ -117,7 +117,7 @@ class RegisterSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['phone', 'is_active']
+        fields = ['phone', 'is_active', "is_staff"]
         read_only_fields = ['is_active']
         extra_kwargs = {
             'phone': {'required': True},
