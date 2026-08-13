@@ -73,5 +73,9 @@ class StudentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def me(self, request):
-        serializer = self.get_serializer(request.user)
+        user = request.user
+        student = Student.objects.filter(user=user).first()
+        if not student:
+            return Response({'detail': _('Student profile not found.')}, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(student)
         return Response(serializer.data)
