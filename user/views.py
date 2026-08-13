@@ -3,6 +3,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status, permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from dj_rest_auth.app_settings import api_settings
 from dj_rest_auth.models import TokenModel
 from dj_rest_auth.utils import jwt_encode
@@ -68,3 +70,8 @@ class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
