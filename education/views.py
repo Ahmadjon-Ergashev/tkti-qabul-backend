@@ -1,4 +1,4 @@
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Specialty, Country, University, EducationForm, EducationType, EducationLanguage
@@ -13,34 +13,44 @@ from .serializers import (
 
 # Create your views here.
 
-class EducationFormListView(APIView):
+class EducationFormListView(GenericAPIView):
+    serializer_class = EducationFormSerializer
+
     def get(self, request):
         edu_forms = EducationForm.objects.all()
-        serializer = EducationFormSerializer(edu_forms, many=True)
+        serializer = self.get_serializer(edu_forms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class EducationTypeListView(APIView):
+class EducationTypeListView(GenericAPIView):
+    serializer_class = EducationTypeSerializer
+
     def get(self, request):
         edu_types = EducationType.objects.all()
-        serializer = EducationTypeSerializer(edu_types, many=True)
+        serializer = self.get_serializer(edu_types, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class EducationLanguageListView(APIView):
+class EducationLanguageListView(GenericAPIView):
+    serializer_class = EducationLanguageSerializer
+
     def get(self, request):
         edu_langs = EducationLanguage.objects.all()
-        serializer = EducationLanguageSerializer(edu_langs, many=True)
+        serializer = self.get_serializer(edu_langs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CountryListView(APIView):
+class CountryListView(GenericAPIView):
+    serializer_class = CountrySerializer
+
     def get(self, request):
         countries = Country.objects.all()
-        serializer = CountrySerializer(countries, many=True)
+        serializer = self.get_serializer(countries, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UniversityListView(APIView):
+class UniversityListView(GenericAPIView):
+    serializer_class = UniversitySerializer
+
     def get(self, request):
         country = request.query_params.get("country", None)
         if country:
@@ -51,7 +61,9 @@ class UniversityListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class SpecialtyFilterView(APIView):
+class SpecialtyFilterView(GenericAPIView):
+    serializer_class = SpecialtySerializer
+
     def get(self, request):
         university = request.query_params.get("university", None)
         edu_lang = request.query_params.get("edu_lang", None)
@@ -65,7 +77,7 @@ class SpecialtyFilterView(APIView):
             education_form_id=edu_form,
             education_type_id=edu_type,
         )
-        serializer = SpecialtySerializer(specialties, many=True)
+        serializer = self.get_serializer(specialties, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         # elif edu_lang and edu_form and edu_type:
         #     specialties = Specialty.objects.filter(

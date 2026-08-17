@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 
-from .serializer import RegisterSerializer, UserSerializer, StudentSerializer
+from .serializers import RegisterSerializer, UserDetailSerializer, StudentSerializer
 from .models import Student, User
 
 # Create your views here.
@@ -73,9 +73,5 @@ class StudentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def me(self, request):
-        user = request.user
-        student = Student.objects.filter(user=user).first()
-        if not student:
-            return Response({'detail': _('Student profile not found.')}, status=status.HTTP_404_NOT_FOUND)
-        serializer = self.get_serializer(student)
+        serializer = UserDetailSerializer(request.user)
         return Response(serializer.data)

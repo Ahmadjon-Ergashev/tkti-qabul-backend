@@ -109,15 +109,15 @@ class RegisterSerializer(serializers.Serializer):
         user.save()
 
         cleaned_data = self.get_student_data()
-        student = Student.objects.create(user=user, **cleaned_data)
+        Student.objects.create(user=user, **cleaned_data)
 
-        return student
+        return user
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['phone', 'is_active', "is_staff"]
+        fields = ['phone', 'is_active']
         read_only_fields = ['is_active']
         extra_kwargs = {
             'phone': {'required': True},
@@ -125,9 +125,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    phone = serializers.CharField(source='user.phone', read_only=True)
+
+    education_degree = serializers.CharField(source='education_degree.name', read_only=True)
+    education_type = serializers.CharField(source='education_type.name', read_only=True)
+    education_language = serializers.CharField(source='education_language.name', read_only=True)
 
     class Meta:
         model = Student
         fields = '__all__'
-        read_only_fields = ['user']
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    student = StudentSerializer()
+
+    class Meta:
+        model = User
+        fields = ['phone', 'is_active', "is_staff", 'student']
+        read_only_fields = ['is_active', 'is_staff']
+        extra_kwargs = {
+            'phone': {'required': True},
+        }
+
+
+

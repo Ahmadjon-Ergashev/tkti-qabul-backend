@@ -124,12 +124,23 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     ),
+    "PAGE_SIZE": 10,
 }
 
 REST_AUTH = {
     'USE_JWT': True,
-    'LOGIN_SERIALIZER': 'user.serializer.LoginSerializer',
-    'REGISTER_SERIALIZER': 'user.serializer.RegisterSerializer',
+    'JWT_AUTH_COOKIE': 'access',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh',
+    'JWT_AUTH_HTTPONLY': True,
+    'JWT_AUTH_SECURE': True,
+    'JWT_AUTH_COOKIE_USE_CSRF': True,
+    'JWT_AUTH_COOKIE_SAMESITE': 'None',
+
+    'ACCESS_TOKEN_LIFETIME': 60 * 60 * 24,  # 1 day in seconds
+    'REFRESH_TOKEN_LIFETIME': 60 * 60 * 24 * 7,  # 7 days in seconds
+    'LOGIN_SERIALIZER': 'user.serializers.LoginSerializer',
+    'REGISTER_SERIALIZER': 'user.serializers.RegisterSerializer',
+    'USER_DETAILS_SERIALIZER': 'user.serializers.UserDetailSerializer',
 }
 
 

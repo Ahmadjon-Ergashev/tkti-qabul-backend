@@ -7,6 +7,6 @@ class Application(models.Model):
     specialty = models.ForeignKey('education.Specialty', on_delete=models.CASCADE)
     application_date = models.DateField(auto_now_add=True)
     invoice = models.ImageField(upload_to='invoices/', null=True, blank=True)
-    is_approved = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=False)
     description = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
