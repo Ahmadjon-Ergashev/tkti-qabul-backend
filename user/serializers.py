@@ -104,7 +104,9 @@ class RegisterSerializer(serializers.Serializer):
     def save(self, request):
         phone = self.validated_data.get('phone')
         passport = self.validated_data.get('passport')
-        user = User.objects.create_user(phone, password=passport)
+        user = User.objects.filter(phone=phone).first()
+        if not user:
+            user = User.objects.create_user(phone, password=passport)
         user.set_password(passport)
         user.save()
 
