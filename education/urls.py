@@ -1,14 +1,23 @@
-from rest_framework.urls import path
+from rest_framework.routers import DefaultRouter
 
-from .views import CountryListView, EducationFormListView, EducationLanguageListView, EducationTypeListView, SpecialtyFilterView, UniversityListView
+from .views import (
+    CountryViewSet,
+    UniversityViewSet,
+    EducationFormViewSet,
+    EducationTypeViewSet,
+    EducationLanguageViewSet,
+    SpecialtyViewSet,
+)
 
 app_name = 'education'
 
-urlpatterns = [
-    path('education-form/', EducationFormListView.as_view(), name='education_form_list'),
-    path('education-type/', EducationTypeListView.as_view(), name='education_type_list'),
-    path('education-language/', EducationLanguageListView.as_view(), name='education_language_list'),
-    path('country/', CountryListView.as_view(), name='country_list'),
-    path('university/', UniversityListView.as_view(), name='university_list'),
-    path('specialty/filter/', SpecialtyFilterView.as_view(), name='specialty_filter'),
-]
+router = DefaultRouter()
+router.register(r'country', CountryViewSet, basename='country')
+router.register(r'university', UniversityViewSet, basename='university')
+router.register(r'education-form', EducationFormViewSet, basename='education-form')
+router.register(r'education-type', EducationTypeViewSet, basename='education-type')
+router.register(r'education-language', EducationLanguageViewSet, basename='education-language')
+router.register(r'specialty', SpecialtyViewSet, basename='specialty')
+
+urlpatterns = router.urls
+

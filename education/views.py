@@ -1,6 +1,5 @@
-from rest_framework.generics import GenericAPIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import permissions
 from .models import Specialty, Country, University, EducationForm, EducationType, EducationLanguage
 from .serializers import (
     SpecialtySerializer,
@@ -11,97 +10,68 @@ from .serializers import (
     EducationLanguageSerializer,
 )
 
-# Create your views here.
 
-class EducationFormListView(GenericAPIView):
-    serializer_class = EducationFormSerializer
-
-    def get(self, request):
-        edu_forms = EducationForm.objects.all()
-        serializer = self.get_serializer(edu_forms, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-class EducationTypeListView(GenericAPIView):
-    serializer_class = EducationTypeSerializer
-
-    def get(self, request):
-        edu_types = EducationType.objects.all()
-        serializer = self.get_serializer(edu_types, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class BaseEducationViewSet(ModelViewSet):
+    def get_permissions(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return [permissions.AllowAny()]
+        return [permissions.IsAdminUser()]
 
 
-class EducationLanguageListView(GenericAPIView):
-    serializer_class = EducationLanguageSerializer
-
-    def get(self, request):
-        edu_langs = EducationLanguage.objects.all()
-        serializer = self.get_serializer(edu_langs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class CountryListView(GenericAPIView):
+class CountryViewSet(BaseEducationViewSet):
+    queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
-    def get(self, request):
-        countries = Country.objects.all()
-        serializer = self.get_serializer(countries, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class UniversityListView(GenericAPIView):
+class UniversityViewSet(BaseEducationViewSet):
     serializer_class = UniversitySerializer
+    queryset = University.objects.all()
 
-    def get(self, request):
-        country = request.query_params.get("country", None)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        country = self.request.query_params.get("country", None)
         if country:
-            universities = University.objects.filter(country_id=country)
-        else:
-            universities = University.objects.all()
-        serializer = UniversitySerializer(universities, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            queryset = queryset.filter(country_id=country)
+        return queryset
 
 
-class SpecialtyFilterView(GenericAPIView):
+class EducationFormViewSet(BaseEducationViewSet):
+    queryset = EducationForm.objects.all()
+    serializer_class = EducationFormSerializer
+
+
+class EducationTypeViewSet(BaseEducationViewSet):
+    queryset = EducationType.objects.all()
+    serializer_class = EducationTypeSerializer
+
+
+class EducationLanguageViewSet(BaseEducationViewSet):
+    queryset = EducationLanguage.objects.all()
+    serializer_class = EducationLanguageSerializer
+
+
+class SpecialtyViewSet(BaseEducationViewSet):
     serializer_class = SpecialtySerializer
+    queryset = Specialty.objects.all()
 
-    def get(self, request):
-        university = request.query_params.get("university", None)
-        edu_lang = request.query_params.get("edu_lang", None)
-        edu_form = request.query_params.get("edu_form", None)
-        edu_type = request.query_params.get("edu_type", None)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        university = self.request.query_params.get("university", None)
+        edu_lang = self.request.query_params.get("edu_lang", None)
+        edu_form = self.request.query_params.get("edu_form", None)
+        edu_type = self.request.query_params.get("edu_type", None)
 
-        # if university and edu_lang and edu_form and edu_type:
-        specialties = Specialty.objects.filter(
-            university_id=university,
-            education_language_id=edu_lang,
-            education_form_id=edu_form,
-            education_type_id=edu_type,
-        )
-        serializer = self.get_serializer(specialties, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        # elif edu_lang and edu_form and edu_type:
-        #     specialties = Specialty.objects.filter(
-        #         education_language_id=edu_lang,
-        #         education_form_id=edu_form,
-        #         education_type_id=edu_type,
-        #     )
-        #     country_ids = specialties.values_list("university", flat=True).distinct()
-        #     country = Country.objects.filter(id__in=country_ids)
-        #     serializer = CountrySerializer(country, many=True)
-        #     return Response({"countries": serializer.data}, status=status.HTTP_200_OK)
-        # elif edu_form and edu_type:
-        #     specialties = Specialty.objects.filter(education_form_id=edu_form, education_type_id=edu_type)
-        #     edu_lang_ids = specialties.values_list("education_language", flat=True).distinct()
-        #     edu_lang = EducationLanguage.objects.filter(id__in=edu_lang_ids)
-        #     serializer = EducationLanguageSerializer(edu_lang, many=True)
-        #     return Response({"edu_lang": serializer.data}, status=status.HTTP_200_OK)
-        # elif edu_type:
-        #     specialties = Specialty.objects.filter(education_type_id=edu_type)
-        #     edu_form_ids = specialties.values_list("education_form", flat=True).distinct()
-        #     edu_form = EducationForm.objects.filter(id__in=edu_form_ids)
-        #     serializer = EducationFormSerializer(edu_form, many=True)
-        #     return Response({"edu_form": serializer.data}, status=status.HTTP_200_OK)
-        # else:
-        #     edu_type = EducationType.objects.all()
-        #     serializer = EducationTypeSerializer(edu_type, many=True)
-        #     return Response({"edu_type": serializer.data}, status=status.HTTP_200_OK)
+        filter_kwargs = {}
+        if university:
+            filter_kwargs["university_id"] = university
+        if edu_lang:
+            filter_kwargs["education_language_id"] = edu_lang
+        if edu_form:
+            filter_kwargs["education_form_id"] = edu_form
+        if edu_type:
+            filter_kwargs["education_type_id"] = edu_type
+
+        if filter_kwargs:
+            queryset = queryset.filter(**filter_kwargs)
+        return queryset
+
